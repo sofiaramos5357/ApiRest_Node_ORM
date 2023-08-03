@@ -1,0 +1,111 @@
+use  RS_Requerimientos
+go
+
+--delete from RequerimientoCambio
+--delete from RequerimientoCambioDetalle
+--delete from Usuario
+--delete from Sistema
+--delete from TipoCambio
+--delete from Rol
+--delete from Documento
+
+--drop table RequerimientoCambio
+--drop table RequerimientoCambioDetalle
+--drop table Usuario
+--drop table Sistema
+--drop table TipoCambio
+--drop table Rol
+--drop table Documento
+--drop table RequerimientoEstado
+
+create table Rol(
+Id int primary key identity(1,1),
+Nombre varchar(20),
+Activo bit default 1
+)
+go
+
+create table Usuario (
+Id int primary key identity(1,1),
+Identidad varchar(13),
+Nombre varchar(25),
+Apellido varchar(25),
+Correo varchar(30),
+Contrasena varchar(100),
+Activo bit default 1,
+NombreUsuario varchar(25),
+RolId int references Rol(Id)
+)
+go
+
+create table Sistema(
+Id int primary key identity(1,1),
+Nombre varchar(30),
+VersionSistema int,
+Activo bit default 1
+)
+go
+
+create table RequerimientoEstado(
+Id int primary key identity(1,1),
+Nombre varchar(30),
+)
+go
+
+create table TipoCambio(
+Id int primary key identity(1,1),
+Nombre varchar(100),
+Activo bit default 1
+)
+go
+
+create table RequerimientoCambio(
+Id int primary key identity(1,1),
+Descripcion varchar(500),
+Objetivo varchar(500),
+FechaCreacion date,
+FechaEntrega date,
+FechaRevision date,
+RequerimientoEstadoId int references RequerimientoEstado(Id),
+UsuarioIdCreador int references Usuario(Id),
+SistemaId int references Sistema(Id),
+UsuarioIdEvaluador int references Usuario(Id),
+UsuarioIdElaborador int references Usuario(Id),
+UsuarioIdAprobador int references Usuario(Id),
+TiempoEstimadoHrs int,
+ObservacionesAprobacion varchar(500),
+ObservacionesRevision varchar(500),
+TipoCambioId int references TipoCambio(Id),
+Observaciones varchar(500)
+)
+go
+
+create table Documento(
+Id int primary key identity(1,1),
+Nombre varchar(50),
+Fecha date,
+DocumentoURL varchar(150),
+Activo bit default 0,
+RequerimientoCambioId int references RequerimientoCambio(Id)
+)
+go
+
+
+create table TipoObjeto(
+Id int primary key identity(1,1),
+Nombre varchar(100),
+Activo bit default 1
+)
+go
+
+create table RequerimientoCambioDetalle(
+Id int primary key identity(1,1),
+TipoObjetoId int references TipoObjeto(Id),
+Objeto varchar(100),
+Ubicacion varchar(100),
+Actividad varchar(500),
+Observaciones varchar(500),
+FechaRegistro date,
+RequerimientoCambioId int references RequerimientoCambio(Id),
+)
+go
